@@ -20,11 +20,9 @@ const isRender = process.env.RENDER === 'true';
     }
 
     // Configurações melhoradas para lançamento do navegador
-    const browser = await puppeteer.launch({
-      headless: isRender ? "new" : false,
-      executablePath: isRender 
-        ? process.env.PUPPETEER_EXECUTABLE_PATH
-        : "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
+    browser = await puppeteer.launch({
+      headless: false,
+      executablePath: "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
       args: [
         "--no-sandbox",
         "--disable-setuid-sandbox",
@@ -32,8 +30,10 @@ const isRender = process.env.RENDER === 'true';
         "--disable-accelerated-2d-canvas",
         "--no-first-run",
         "--no-zygote",
-        "--disable-gpu"
-      ]
+        "--disable-gpu",
+      ],
+      userDataDir: "./user_data",
+      ignoreDefaultArgs: ["--enable-automation"],
     });
 
     const page = await browser.newPage();
