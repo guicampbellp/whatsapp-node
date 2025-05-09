@@ -1,5 +1,6 @@
 const puppeteer = require("puppeteer");
 const fs = require("fs-extra");
+const isRender = process.env.RENDER === 'true';
 
 (async () => {
   let browser;
@@ -19,9 +20,11 @@ const fs = require("fs-extra");
     }
 
     // Configurações melhoradas para lançamento do navegador
-    browser = await puppeteer.launch({
-      headless: false,
-      executablePath: "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
+    const browser = await puppeteer.launch({
+      headless: isRender ? "new" : false,
+      executablePath: isRender 
+        ? process.env.PUPPETEER_EXECUTABLE_PATH
+        : "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
       args: [
         "--no-sandbox",
         "--disable-setuid-sandbox",
@@ -29,10 +32,8 @@ const fs = require("fs-extra");
         "--disable-accelerated-2d-canvas",
         "--no-first-run",
         "--no-zygote",
-        "--disable-gpu",
-      ],
-      userDataDir: "./user_data",
-      ignoreDefaultArgs: ["--enable-automation"],
+        "--disable-gpu"
+      ]
     });
 
     const page = await browser.newPage();
